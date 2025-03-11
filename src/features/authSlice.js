@@ -23,7 +23,7 @@ export const loginUser = createAsyncThunk(
       const response = await axios.post(`${API_URL}/login`, userData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data || "terjadi kesalahan");
     }
   }
 )
@@ -35,6 +35,7 @@ const authSlice = createSlice({
     token:  localStorage.getItem("error") || null,
     loading: false,
     error: null,
+    success: false
   },
   reducers: {
     logout: (state) => {
@@ -42,6 +43,9 @@ const authSlice = createSlice({
       state.token = null;
       localStorage.removeItem("token");
     },
+    resetSuccess: (state) => {
+      state.success = false;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -51,10 +55,11 @@ const authSlice = createSlice({
     })
     .addCase(registerUser.fulfilled, (state, action) => {
       state.loading = false;
+      state.success = true;
     })
     .addCase(registerUser.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.payload?.message || "terjadi kesalahan";
+      state.error = action.payload?.message || "terjadi kesalahan | email telah terdaftar";
     })
     // Login
     .addCase(loginUser.pending, (state) => {
