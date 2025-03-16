@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/todo/api/auth";
+const API_URL = "https://taskmanagement-production-97a4.up.railway.app/todo/api/auth";
+
 
 // ASYNC THUNK REGISTER 
 export const registerUser = createAsyncThunk(
@@ -59,7 +60,7 @@ const authSlice = createSlice({
     })
     .addCase(registerUser.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.payload?.message || "terjadi kesalahan | email telah terdaftar";
+      state.error = action.payload?.msg || "terjadi kesalahan";
     })
     // Login
     .addCase(loginUser.pending, (state) => {

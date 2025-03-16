@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/authSlice";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  }
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error, token } = useSelector((state) => state.auth);
@@ -28,6 +33,8 @@ const Login = () => {
     if (token) {
       navigate("/dashboard");
     }
+
+    
   }, [token, navigate]);
 
   return (
@@ -41,7 +48,7 @@ const Login = () => {
         {/* Kanan - Form */}
         <div className="w-full md:w-1/2 px-6">
           <h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">Login</h2>
-          {error && <p className="text-red-500 text-center mb-2">{error}</p>}
+          {error && <p className="text-white text-center mb-2">{error.msg}</p>}
           {loading && <p className="text-blue-500 text-center mb-2">Loading...</p>}
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -57,9 +64,9 @@ const Login = () => {
               />
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Password"
                 value={formData.password}
@@ -67,6 +74,13 @@ const Login = () => {
                 className="w-full p-3 border bg-[#F6F8D5] border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 required
               />
+              <button
+                type="button"
+                className="absolute top-1/2 right-3 transform -translate-y-1/2"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
 
             <button
